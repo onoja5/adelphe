@@ -5,6 +5,9 @@ import { useAuthStore } from '../src/store/authStore';
 import { Colors } from '../src/constants/colors';
 import { Button } from '../src/components';
 
+// Import the logo
+const adelpheLogo = require('../assets/images/adelphe-logo.png');
+
 export default function SplashScreen() {
   const router = useRouter();
   const { user, isInitialized } = useAuthStore();
@@ -25,11 +28,13 @@ export default function SplashScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>A</Text>
-          </View>
-          <Text style={styles.title}>Adelphi</Text>
+          <Text style={styles.title}>Adelphe Connect</Text>
           <Text style={styles.subtitle}>Menopause Companion</Text>
+          <Image 
+            source={adelpheLogo} 
+            style={styles.logo}
+            resizeMode="contain"
+          />
         </View>
       </View>
     );
@@ -38,11 +43,13 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <View style={styles.logoCircle}>
-          <Text style={styles.logoText}>A</Text>
-        </View>
-        <Text style={styles.title}>Adelphi</Text>
+        <Text style={styles.title}>Adelphe Connect</Text>
         <Text style={styles.subtitle}>Menopause Companion</Text>
+        <Image 
+          source={adelpheLogo} 
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
       <View style={styles.content}>
