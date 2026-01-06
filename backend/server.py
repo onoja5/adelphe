@@ -522,6 +522,93 @@ async def login(credentials: UserLogin):
         )
     )
 
+@api_router.post("/auth/google", response_model=TokenResponse)
+async def google_auth(auth_data: GoogleAuthRequest):
+    """Authenticate with Google OAuth token"""
+    try:
+        # Verify the Google ID token
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://oauth2.googleapis.com/tokeninfo?id_token={auth_data.id_token}"
+            )
+            
+            if response.status_code != 200:
+                raise HTTPException(status_code=401, detail="Invalid Google token")
+            
+            google_data = response.json()
+            
+            # Verify the token is for our app (if client ID is configured)
+            if GOOGLE_CLIENT_ID and google_data.get("aud") != GOOGLE_CLIENT_ID:
+                # Also accept web client IDs that may differ
+                logger.warning(f"Token audience mismatch: {google_data.get('aud')}")
+            
+            email = google_data.get("email")
+            name = google_data.get("name", email.split("@")[0])
+            
+            if not email:
+                raise HTTPException(status_code=400, detail="Could not get email from Google")
+            
+            # Check if user exists
+            existing_user = await db.users.find_one({"email": email.lower()})
+            
+            if existing_user:
+                # User exists, log them in
+                user_id = str(existing_user["_id"])
+                token = create_access_token({"user_id": user_id})
+                
+                return TokenResponse(
+                    access_token=token,
+                    user=UserResponse(
+                        id=user_id,
+                        email=existing_user["email"],
+                        name=existing_user["name"],
+                        role=UserRole(existing_user["role"]),
+                        has_completed_onboarding=existing_user.get("has_completed_onboarding", False),
+                        created_at=existing_user["created_at"]
+                    )
+                )
+            else:
+                # Create new user
+                user_dict = {
+                    "email": email.lower(),
+                    "password_hash": None,  # No password for Google users
+                    "name": name,
+                    "role": auth_data.role.value,
+                    "has_completed_onboarding": False,
+                    "google_id": google_data.get("sub"),
+                    "auth_provider": "google",
+                    "created_at": datetime.utcnow()
+                }
+                
+                result = await db.users.insert_one(user_dict)
+                user_id = str(result.inserted_id)
+                
+                # Create profile
+                profile_dict = {
+                    "user_id": user_id,
+                    "created_at": datetime.utcnow()
+                }
+                await db.profiles.insert_one(profile_dict)
+                
+                # Generate token
+                token = create_access_token({"user_id": user_id})
+                
+                return TokenResponse(
+                    access_token=token,
+                    user=UserResponse(
+                        id=user_id,
+                        email=user_dict["email"],
+                        name=user_dict["name"],
+                        role=auth_data.role,
+                        has_completed_onboarding=False,
+                        created_at=user_dict["created_at"]
+                    )
+                )
+                
+    except httpx.RequestError as e:
+        logger.error(f"Google auth request error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to verify Google token")
+
 @api_router.get("/auth/me", response_model=UserResponse)
 async def get_me(user: dict = Depends(get_current_user)):
     return UserResponse(
