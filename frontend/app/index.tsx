@@ -1,16 +1,79 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuthStore } from '../src/store/authStore';
+import { Colors } from '../src/constants/colors';
+import { Button } from '../src/components';
 
-const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+export default function SplashScreen() {
+  const router = useRouter();
+  const { user, isInitialized } = useAuthStore();
 
-export default function Index() {
-  console.log(EXPO_PUBLIC_BACKEND_URL, "EXPO_PUBLIC_BACKEND_URL");
+  useEffect(() => {
+    if (isInitialized) {
+      if (user) {
+        if (!user.has_completed_onboarding && user.role === 'primary') {
+          router.replace('/onboarding');
+        } else {
+          router.replace('/(tabs)');
+        }
+      }
+    }
+  }, [isInitialized, user]);
+
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <View style={styles.logoCircle}>
+            <Text style={styles.logoText}>A</Text>
+          </View>
+          <Text style={styles.title}>Adelphi</Text>
+          <Text style={styles.subtitle}>Menopause Companion</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../assets/images/app-image.png")}
-        style={styles.image}
-      />
+      <View style={styles.logoContainer}>
+        <View style={styles.logoCircle}>
+          <Text style={styles.logoText}>A</Text>
+        </View>
+        <Text style={styles.title}>Adelphi</Text>
+        <Text style={styles.subtitle}>Menopause Companion</Text>
+      </View>
+
+      <View style={styles.content}>
+        <Text style={styles.welcomeTitle}>Welcome</Text>
+        <Text style={styles.welcomeText}>
+          Your personal companion for understanding and managing menopause with confidence and support.
+        </Text>
+      </View>
+
+      <View style={styles.buttons}>
+        <Button
+          title="Get Started"
+          onPress={() => router.push('/auth/register')}
+          size="large"
+        />
+        <Button
+          title="I already have an account"
+          onPress={() => router.push('/auth/login')}
+          variant="ghost"
+          size="large"
+        />
+        <Text style={styles.partnerLink}>
+          Are you here to support someone?
+        </Text>
+        <Button
+          title="Partner Access"
+          onPress={() => router.push('/auth/partner-register')}
+          variant="outline"
+          size="small"
+        />
+      </View>
     </View>
   );
 }
@@ -18,13 +81,66 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c0c0c",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: Colors.background,
+    paddingHorizontal: 24,
+    paddingTop: 80,
+    paddingBottom: 40,
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  logoText: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: Colors.text,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    marginTop: 4,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  welcomeText: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 24,
+    paddingHorizontal: 20,
+  },
+  buttons: {
+    gap: 12,
+    alignItems: 'center',
+  },
+  partnerLink: {
+    fontSize: 14,
+    color: Colors.textSecondary,
+    marginTop: 16,
+    marginBottom: 8,
   },
 });
