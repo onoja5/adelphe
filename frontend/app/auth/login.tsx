@@ -160,8 +160,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   header: {
-    marginTop: 32,
+    alignItems: 'center',
+    marginTop: 24,
     marginBottom: 32,
+  },
+  logo: {
+    width: 120,
+    height: 100,
+    marginBottom: 16,
   },
   title: {
     fontSize: 28,
@@ -171,52 +177,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.textSecondary,
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    marginBottom: 24,
-    gap: 12,
-  },
-  googleIconContainer: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  googleIcon: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#4285F4',
-  },
-  googleButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.text,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: Colors.border,
-  },
-  dividerText: {
-    paddingHorizontal: 16,
-    fontSize: 14,
     color: Colors.textSecondary,
   },
   form: {
