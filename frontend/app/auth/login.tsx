@@ -17,14 +17,16 @@ import { Colors } from '../../src/constants/colors';
 import { Button, Input } from '../../src/components';
 import { useAuthStore } from '../../src/store/authStore';
 
+// Import the logo
+const adelpheLogo = require('../../assets/images/adelphe-logo.png');
+
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, googleAuth, isLoading } = useAuthStore();
+  const { login, isLoading } = useAuthStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [googleLoading, setGoogleLoading] = useState(false);
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -62,23 +64,6 @@ export default function LoginScreen() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setGoogleLoading(true);
-    try {
-      // Note: Google Sign-In requires configuration with a Google Cloud project
-      // For demo purposes, this shows an informational message
-      Alert.alert(
-        'Google Sign-In',
-        'Google Sign-In requires a Google Cloud project configuration. Please provide your Google Client ID to enable this feature.',
-        [{ text: 'OK' }]
-      );
-    } catch (error: any) {
-      Alert.alert('Google Sign-In', error.message);
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -97,29 +82,13 @@ export default function LoginScreen() {
           </TouchableOpacity>
 
           <View style={styles.header}>
+            <Image 
+              source={adelpheLogo} 
+              style={styles.logo}
+              resizeMode="contain"
+            />
             <Text style={styles.title}>Welcome Back</Text>
-            <Text style={styles.subtitle}>Sign in to continue your journey</Text>
-          </View>
-
-          {/* Google Sign-In Button */}
-          <TouchableOpacity
-            style={styles.googleButton}
-            onPress={handleGoogleSignIn}
-            disabled={googleLoading}
-          >
-            <View style={styles.googleIconContainer}>
-              <Text style={styles.googleIcon}>G</Text>
-            </View>
-            <Text style={styles.googleButtonText}>
-              {googleLoading ? 'Signing in...' : 'Continue with Google'}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or sign in with email</Text>
-            <View style={styles.dividerLine} />
+            <Text style={styles.subtitle}>Sign in to Adelphe Connect</Text>
           </View>
 
           <View style={styles.form}>
