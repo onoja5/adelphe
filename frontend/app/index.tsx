@@ -90,31 +90,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingTop: 60,
     paddingBottom: 40,
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
-  logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  logoText: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  logo: {
+    width: 180,
+    height: 140,
+    marginTop: 12,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: Colors.text,
+    color: Colors.primary,
   },
   subtitle: {
     fontSize: 16,
