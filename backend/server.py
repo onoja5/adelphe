@@ -148,6 +148,11 @@ class UserProfileUpdate(BaseModel):
     medical_conditions: Optional[List[str]] = None
     medical_notes: Optional[str] = None
 
+# Google OAuth Model
+class GoogleAuthRequest(BaseModel):
+    id_token: str
+    role: UserRole = UserRole.PRIMARY
+
 # Symptom Models
 class SymptomBase(BaseModel):
     name: str
