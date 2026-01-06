@@ -25,6 +25,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -64,6 +65,22 @@ export default function RegisterScreen() {
     }
   };
 
+  const handleGoogleSignUp = async () => {
+    setGoogleLoading(true);
+    try {
+      // Note: Google Sign-In requires configuration with a Google Cloud project
+      Alert.alert(
+        'Google Sign-Up',
+        'Google Sign-Up requires a Google Cloud project configuration. Please provide your Google Client ID to enable this feature.',
+        [{ text: 'OK' }]
+      );
+    } catch (error: any) {
+      Alert.alert('Google Sign-Up', error.message);
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -84,6 +101,27 @@ export default function RegisterScreen() {
           <View style={styles.header}>
             <Text style={styles.title}>Create Account</Text>
             <Text style={styles.subtitle}>Start your menopause wellness journey</Text>
+          </View>
+
+          {/* Google Sign-Up Button */}
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={handleGoogleSignUp}
+            disabled={googleLoading}
+          >
+            <View style={styles.googleIconContainer}>
+              <Text style={styles.googleIcon}>G</Text>
+            </View>
+            <Text style={styles.googleButtonText}>
+              {googleLoading ? 'Signing up...' : 'Sign up with Google'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Divider */}
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or sign up with email</Text>
+            <View style={styles.dividerLine} />
           </View>
 
           <View style={styles.form}>
@@ -175,7 +213,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: 24,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   title: {
     fontSize: 28,
@@ -185,6 +223,52 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
+    color: Colors.textSecondary,
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    gap: 12,
+  },
+  googleIconContainer: {
+    width: 24,
+    height: 24,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4285F4',
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.text,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.border,
+  },
+  dividerText: {
+    paddingHorizontal: 16,
+    fontSize: 14,
     color: Colors.textSecondary,
   },
   form: {
