@@ -14,6 +14,7 @@ from passlib.context import CryptContext
 import jwt
 from bson import ObjectId
 from enum import Enum
+import httpx
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -27,6 +28,9 @@ db = client[os.environ.get('DB_NAME', 'adelphi_db')]
 SECRET_KEY = os.environ.get('JWT_SECRET', 'adelphi-secret-key-change-in-production')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 30
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
